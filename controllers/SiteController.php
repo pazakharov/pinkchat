@@ -3,12 +3,13 @@
 namespace app\controllers;
 
 use Yii;
-use yii\filters\AccessControl;
-use yii\web\Controller;
 use yii\web\Response;
-use yii\filters\VerbFilter;
+use yii\web\Controller;
 use app\models\LoginForm;
+use app\models\SignupForm;
 use app\models\ContactForm;
+use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
 class SiteController extends Controller
 {
@@ -85,6 +86,29 @@ class SiteController extends Controller
             'model' => $model,
         ]);
     }
+
+    
+    /**
+     * Форма регистрации.
+     *
+     * @return mixed
+     */
+    public function actionSignup()
+    {
+        $model = new SignupForm();
+        if ($model->load(Yii::$app->request->post())) {
+            if ($user = $model->signup()) {
+                if (Yii::$app->getUser()->login($user)) {
+                    return $this->goHome();
+                }
+            }
+        }
+    
+        return $this->render('signup', [
+            'model' => $model,
+        ]);
+    }
+   
 
     /**
      * Logout action.
