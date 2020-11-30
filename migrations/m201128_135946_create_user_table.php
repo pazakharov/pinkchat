@@ -22,7 +22,7 @@ class m201128_135946_create_user_table extends Migration
             'password_hash' => $this->string()->notNull(),
             'password_reset_token' => $this->string()->unique(),
             'email' => $this->string()->notNull()->unique(),
-            'is_admin' => $this->tinyInteger(),
+            'role' => $this->varcstring(50)->defaultValue('user'),
             'created_at' => $this->integer()->notNull(),
             'updated_at' => $this->integer()->notNull(),
         ], $tableOptions);

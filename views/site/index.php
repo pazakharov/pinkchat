@@ -1,53 +1,78 @@
 <?php
 
+use yii\helpers\Url;
+use yii\helpers\Html;
+use yii\widgets\Pjax;
+use yii\bootstrap\ActiveForm;
+
 /* @var $this yii\web\View */
+/* @var $messages array app\models\Messages*/
 
-$this->title = 'My Yii Application';
+$this->title = 'PinkCatChat';
 ?>
-<div class="site-index">
+<div class="site-index h-100">
+    <div class="d-flex flex-row row  w-100 h-100">
+        <div class="col-sm-12 col-md-3 w-100 h-100">
+        </div>
+        <div class="col-sm-12 col-md-6 w-100 h-100">
+            <div class="panel panel-default">
 
-    <div class="jumbotron">
-        <h1>Congratulations!</h1>
+                <div class="panel-heading">
+                    <h3 class="panel-title">Чат</h3>
+                </div>
+                <div class="panel-body chat-panel-body">
 
-        <p class="lead">You have successfully created your Yii-powered application.</p>
+                    <?php foreach ($messages as $message) { ?>
 
-        <p><a class="btn btn-lg btn-success" href="http://www.yiiframework.com">Get started with Yii</a></p>
-    </div>
+                        <div class="well well-message <?= ($message->deleted_at) ? 'well-danger' : '' ?>">
+                            <div>
+                                <strong><?php echo $message->author->username; ?>:</strong>
+                                <?php echo $message->message; ?>
+                            </div>
+                            <?php if (!$message->deleted_at) { ?>
+                                <a type="button" href="<?php echo Url::toRoute(['site/delete', 'id' => $message->id]) ?>" class="close" aria-hidden="true">&times;</a>
+                            <?php } else {
+                                echo '<span class="delete_lable">Удалено</span>';
+                            } ?>
+                        </div>
+                    <?php }  ?>
 
-    <div class="body-content">
+                </div>
+                <div class="panel-footer">
+                    <?php if (Yii::$app->user->isGuest) { ?>
 
-        <div class="row">
-            <div class="col-lg-4">
-                <h2>Heading</h2>
+                        <div class="h4 bold ">Авторизуйтесь чтобы оставлять сообщения</div>
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
+                    <?php } else { ?>
+                        <?php $form = ActiveForm::begin(['action' => Url::toRoute('site/add_message')]) ?>
 
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
+                        <div class="input-group">
+                            <?= $form->field($messageModelForm, 'messageText', ['options' => ['tag' => null]])->label(false) ?>
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
+                            <span class="input-group-btn">
+                                <?= Html::submitButton('Отправить', ['class' => 'btn btn-default']) ?>
+                            </span>
+                        </div>
+                        <?php ActiveForm::end() ?>
 
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
-            </div>
-            <div class="col-lg-4">
-                <h2>Heading</h2>
+                    <?php } ?>
+                </div>
 
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur.</p>
-
-                <p><a class="btn btn-default" href="http://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
             </div>
         </div>
 
+
+        <div class="col-sm-12 col-md-3 w-100 h-100 h-100">
+
+
+
+
+
+
+
+
+        </div>
+
     </div>
+
 </div>

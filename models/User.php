@@ -16,6 +16,7 @@ use yii\web\IdentityInterface;
  * @property string $password_reset_token
  * @property string $email
  * @property string $auth_key
+ * @property string $role
  * @property integer $status
  * @property integer $created_at
  * @property integer $updated_at
@@ -23,6 +24,9 @@ use yii\web\IdentityInterface;
  */
 class User extends ActiveRecord implements IdentityInterface
 {
+
+   private const ADMIN_ROLE_NAME = 'admin'; 
+
     /**
      * @inheritdoc
      */
@@ -168,5 +172,9 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+
+    public function is_admin(){
+            return (Yii::$app->user->identity->role === self::ADMIN_ROLE_NAME);
     }
 }
