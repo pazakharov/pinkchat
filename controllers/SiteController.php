@@ -7,14 +7,12 @@ use app\models\User;
 use yii\web\Response;
 use app\models\Message;
 use yii\web\Controller;
-use yii\helpers\VarDumper;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use app\models\forms\LoginForm;
 use app\models\forms\SignupForm;
 use yii\data\ActiveDataProvider;
 use app\models\forms\MessageForm;
-use yii\debug\models\timeline\DataProvider;
 
 class SiteController extends Controller
 {

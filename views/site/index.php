@@ -1,9 +1,7 @@
 <?php
 
-use app\models\User;
 use yii\helpers\Url;
 use yii\helpers\Html;
-use yii\widgets\Pjax;
 use yii\widgets\ListView;
 use yii\bootstrap\ActiveForm;
 

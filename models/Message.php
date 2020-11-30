@@ -3,10 +3,6 @@
 namespace app\models;
 
 use Yii;
-use yii\data\ActiveDataProvider;
-use yii\behaviors\TimestampBehavior;
-use yii\debug\models\timeline\DataProvider;
-use yii\helpers\VarDumper;
 
 /**
  * This is the model class for table "messages".
