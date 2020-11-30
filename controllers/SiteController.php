@@ -3,14 +3,18 @@
 namespace app\controllers;
 
 use Yii;
+use app\models\User;
 use yii\web\Response;
-use yii\web\Controller;
 use app\models\Message;
+use yii\web\Controller;
+use yii\helpers\VarDumper;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use app\models\forms\LoginForm;
-use app\models\forms\MessageForm;
 use app\models\forms\SignupForm;
+use yii\data\ActiveDataProvider;
+use app\models\forms\MessageForm;
+use yii\debug\models\timeline\DataProvider;
 
 class SiteController extends Controller
 {
@@ -34,7 +38,7 @@ class SiteController extends Controller
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['delete'],
+                        'actions' => ['grant_admin_rights', 'delete', 'restore'],
                         'allow' => true,
                         'matchCallback' => function ($rule, $action) {
                             return ((!Yii::$app->user->isGuest && Yii::$app->user->identity->is_admin()));
@@ -79,6 +83,11 @@ class SiteController extends Controller
         return $this->render('index', [
             'messageModelForm' =>  new MessageForm(),
             'messages' => Message::MessagesQuery()->All(),
+            'usersDataProvider' => new ActiveDataProvider(['query' => User::find()]),
+            'messagesDataProvider' => new ActiveDataProvider([
+                'query' => Message::MessagesQuery()->andFilterWhere(['not', ['is', 'deleted_at', new \yii\db\Expression('null')]]),
+                'pagination' => ['pageSize' => 7]
+            ]),
 
         ]);
     }
@@ -111,6 +120,27 @@ class SiteController extends Controller
     }
 
     /**
+     * Снять пометку об удалении 
+     * @return void
+     */
+    public function actionRestore()
+    {
+        Message::find()->where(['id' => Yii::$app->request->get('id')])->one()->restore();
+
+        $this->redirect(['site/index']);
+    }
+
+    /**
+     * Снять пометку об удалении 
+     * @return void
+     */
+    public function actionGrant_admin_rights()
+    {
+        User::grant_admin_rights(Yii::$app->request->get('id'));
+        $this->redirect(['site/index']);
+    }
+
+    /**
      * Login action.
      *
      * @return Response|string
@@ -123,7 +153,7 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+            return $this->goHome();
         }
 
         $model->password = '';

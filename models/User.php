@@ -1,4 +1,5 @@
 <?php
+
 namespace app\models;
 
 use Yii;
@@ -25,7 +26,7 @@ use yii\web\IdentityInterface;
 class User extends ActiveRecord implements IdentityInterface
 {
 
-   private const ADMIN_ROLE_NAME = 'admin'; 
+    private const ADMIN_ROLE_NAME = 'admin';
 
     /**
      * @inheritdoc
@@ -174,7 +175,29 @@ class User extends ActiveRecord implements IdentityInterface
         $this->password_reset_token = null;
     }
 
-    public function is_admin(){
-            return (Yii::$app->user->identity->role === self::ADMIN_ROLE_NAME);
+    /**
+     * @return bool
+     *   
+     */
+    public function is_admin()
+    {
+        return (Yii::$app->user->identity->role === self::ADMIN_ROLE_NAME);
+    }
+
+    /**
+     * @param integer $id
+     * 
+     * @return bool
+     */
+    public static function grant_admin_rights($id)
+    {
+
+        $user = self::find()->where(['id' => $id])->one();
+        if ($user->role === 'admin') {
+            $user->role = null;
+        } else {
+            $user->role = 'admin';
+        }
+        return $user->save();
     }
 }

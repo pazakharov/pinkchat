@@ -6,6 +6,7 @@ use Yii;
 use yii\data\ActiveDataProvider;
 use yii\behaviors\TimestampBehavior;
 use yii\debug\models\timeline\DataProvider;
+use yii\helpers\VarDumper;
 
 /**
  * This is the model class for table "messages".
@@ -91,13 +92,26 @@ class Message extends \yii\db\ActiveRecord
         $query = self::find()->orderBy(['id' => SORT_DESC])->with('author');
         if ((Yii::$app->user->isGuest) || (!Yii::$app->user->isGuest && !Yii::$app->user->identity->is_admin())) {
             $query->andFilterWhere(['is', 'deleted_at', new \yii\db\Expression('null')]);
+            $query->limit(100);
         }
         return $query;
     }
 
+    /**
+     * @return bool
+     */
     public function delete()
     {
         $this->deleted_at = time();
+        return $this->save();
+    }
+
+    /**
+     * @return bool
+     */
+    public function restore()
+    {
+        $this->deleted_at = null;
         return $this->save();
     }
 }
