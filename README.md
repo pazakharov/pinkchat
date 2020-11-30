@@ -1,7 +1,7 @@
 http://pinkchat.phpdev.xyz
 
 Пользователи:
-admiin
+admin
 456456
 
 user
