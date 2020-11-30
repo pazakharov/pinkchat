@@ -189,7 +189,7 @@ class User extends ActiveRecord implements IdentityInterface
      * 
      * @return bool
      */
-    public static function grant_admin_rights($id)
+    public static function grantAdminRights($id)
     {
 
         $user = self::find()->where(['id' => $id])->one();

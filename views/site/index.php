@@ -83,7 +83,7 @@ $this->title = 'PinkCatChat';
                     <?php if (Yii::$app->user->isGuest) { ?>
                         <div class="h4 bold ">Авторизуйтесь чтобы оставлять сообщения</div>
                     <?php } else { ?>
-                        <?php $form = ActiveForm::begin(['action' => Url::toRoute('site/add_message')]) ?>
+                        <?php $form = ActiveForm::begin(['action' => Url::toRoute('site/add-message')]) ?>
 
                         <div class="input-group">
                             <?= $form->field($messageModelForm, 'messageText', ['options' => ['tag' => null]])->label(false) ?>

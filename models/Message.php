@@ -97,21 +97,33 @@ class Message extends \yii\db\ActiveRecord
         return $query;
     }
 
-    /**
-     * @return bool
-     */
-    public function delete()
-    {
-        $this->deleted_at = time();
-        return $this->save();
-    }
 
     /**
+     * @param mixed $id
+     * 
      * @return bool
      */
-    public function restore()
+    public static function softDelete($id)
     {
-        $this->deleted_at = null;
-        return $this->save();
+        if (self::find()->where(['id' => $id])->exists()) {
+            $message =  self::find()->where(['id' => $id])->one();
+            $message->deleted_at = time();
+            return $message->save();
+        }
+    }
+
+
+    /**
+     * @param mixed $id
+     * 
+     * @return bool
+     */
+    public static function restore($id)
+    {
+        if (self::find()->where(['id' => $id])->exists()) {
+            $message =  self::find()->where(['id' => $id])->one();
+            $message->deleted_at = null;
+            return $message->save();
+        }
     }
 }

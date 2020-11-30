@@ -28,7 +28,7 @@ class SiteController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['logout', 'index', 'add_message'],
+                        'actions' => ['logout', 'index', 'add-message'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -38,7 +38,7 @@ class SiteController extends Controller
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['grant_admin_rights', 'delete', 'restore'],
+                        'actions' => ['grant-admin-rights', 'delete', 'restore'],
                         'allow' => true,
                         'matchCallback' => function ($rule, $action) {
                             return ((!Yii::$app->user->isGuest && Yii::$app->user->identity->is_admin()));
@@ -51,7 +51,7 @@ class SiteController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'logout' => ['POST'],
-                    'add_message' => ['POST'],
+                    'add-message' => ['POST'],
                 ],
             ],
         ];
@@ -96,7 +96,7 @@ class SiteController extends Controller
      * Добавим сообщение в базу
      * @return void
      */
-    public function actionAdd_message()
+    public function actionAddMessage()
     {
         $messageForm = new MessageForm();
         if (Yii::$app->request->isPost) {
@@ -113,9 +113,8 @@ class SiteController extends Controller
      */
     public function actionDelete()
     {
-        $message = Message::find()->where(['id' => Yii::$app->request->get('id')])->one();
-        if (!$message->delete()) {
-        }
+        Message::softDelete(Yii::$app->request->get('id'));
+
         $this->redirect(['site/index']);
     }
 
@@ -125,8 +124,7 @@ class SiteController extends Controller
      */
     public function actionRestore()
     {
-        Message::find()->where(['id' => Yii::$app->request->get('id')])->one()->restore();
-
+        Message::restore(Yii::$app->request->get('id'));
         $this->redirect(['site/index']);
     }
 
@@ -134,9 +132,9 @@ class SiteController extends Controller
      * Снять пометку об удалении 
      * @return void
      */
-    public function actionGrant_admin_rights()
+    public function actionGrantAdminRights()
     {
-        User::grant_admin_rights(Yii::$app->request->get('id'));
+        User::grantAdminRights(Yii::$app->request->get('id'));
         $this->redirect(['site/index']);
     }
 
