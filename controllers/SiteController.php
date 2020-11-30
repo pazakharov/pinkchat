@@ -33,7 +33,7 @@ class SiteController extends Controller
                         'roles' => ['@'],
                     ],
                     [
-                        'actions' => ['login', 'index', 'signin',],
+                        'actions' => ['login', 'index', 'signup',],
                         'allow' => true,
                         'roles' => ['?'],
                     ],
@@ -177,7 +177,6 @@ class SiteController extends Controller
                 }
             }
         }
-
         return $this->render('signup', [
             'model' => $model,
         ]);
