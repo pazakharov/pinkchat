@@ -13,6 +13,7 @@ use app\models\forms\LoginForm;
 use app\models\forms\SignupForm;
 use yii\data\ActiveDataProvider;
 use app\models\forms\MessageForm;
+use yii\web\ForbiddenHttpException;
 
 class SiteController extends Controller
 {
@@ -132,7 +133,20 @@ class SiteController extends Controller
      */
     public function actionGrantAdminRights()
     {
+
+        $token = Yii::$app->request->get(Yii::$app->request->csrfParam);
+
+        $token = Yii::$app->security->unmaskToken($token);
+        
+        $trueToken = Yii::$app->security->unmaskToken(Yii::$app->request->csrfToken);
+        
+        if (!$token || $token != $trueToken)
+        {
+            throw new ForbiddenHttpException;
+        }
+
         User::grantAdminRights(Yii::$app->request->get('id'));
+        
         $this->redirect(['site/index']);
     }
 

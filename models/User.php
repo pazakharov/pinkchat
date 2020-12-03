@@ -193,10 +193,10 @@ class User extends ActiveRecord implements IdentityInterface
     {
 
         $user = self::find()->where(['id' => $id])->one();
-        if ($user->role === 'admin') {
+        if ($user->role === self::ADMIN_ROLE_NAME) {
             $user->role = null;
         } else {
-            $user->role = 'admin';
+            $user->role = self::ADMIN_ROLE_NAME;
         }
         return $user->save();
     }

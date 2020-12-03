@@ -22,6 +22,7 @@ class MessageForm extends Model
         return [
             [['messageText'], 'required'],
             [['messageText'], 'string'],
+            [['messageText'],'filter','filter'=>'\yii\helpers\HtmlPurifier::process'],
            ];
     }
 
